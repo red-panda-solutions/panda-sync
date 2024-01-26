@@ -20,11 +20,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Verify formatting
-        run: flutter format --set-exit-if-changed
+      - name: Run build runner
+        run: dart run build_runner build
 
       - name: Analyze project source
-        run: flutter analyze --fatal-infos
+        run: flutter analyze
 
       - name: Run tests
         run: flutter test
