@@ -24,7 +24,7 @@ class SyncManager<T> {
       var request = queueManager.pop();
       if (request != null) {
         try {
-          var response = await processRequest(request);
+          await processRequest(request);
           //await localStorageService.post(request.key, response);
         } catch (e) {
           // Handle error - optionally re-queue the request
