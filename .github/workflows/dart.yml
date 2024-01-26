@@ -15,7 +15,7 @@ jobs:
       - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'  # Use the latest stable version of Flutter
+          flutter-version: 3.10.6
 
       - name: Install dependencies
         run: flutter pub get
