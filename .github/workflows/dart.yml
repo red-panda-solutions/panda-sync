@@ -15,7 +15,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'latest'
+          flutter-version: 3.16.9
 
       - name: Install dependencies
         run: flutter pub get
