@@ -1,3 +1,0 @@
-class OfflineFirst {
-  const OfflineFirst();
-}
