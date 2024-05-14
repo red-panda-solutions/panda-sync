@@ -1035,3 +1035,608 @@ extension StoredRequestQueryProperty
     });
   }
 }
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+extension GetDataObjectCollection on Isar {
+  IsarCollection<DataObject> get dataObjects => this.collection();
+}
+
+const DataObjectSchema = CollectionSchema(
+  name: r'DataObject',
+  id: -7451456061493246013,
+  properties: {
+    r'jsonData': PropertySchema(
+      id: 0,
+      name: r'jsonData',
+      type: IsarType.string,
+    ),
+    r'type': PropertySchema(
+      id: 1,
+      name: r'type',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _dataObjectEstimateSize,
+  serialize: _dataObjectSerialize,
+  deserialize: _dataObjectDeserialize,
+  deserializeProp: _dataObjectDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {},
+  embeddedSchemas: {},
+  getId: _dataObjectGetId,
+  getLinks: _dataObjectGetLinks,
+  attach: _dataObjectAttach,
+  version: '3.1.0+1',
+);
+
+int _dataObjectEstimateSize(
+  DataObject object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.jsonData.length * 3;
+  bytesCount += 3 + object.type.length * 3;
+  return bytesCount;
+}
+
+void _dataObjectSerialize(
+  DataObject object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.jsonData);
+  writer.writeString(offsets[1], object.type);
+}
+
+DataObject _dataObjectDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = DataObject();
+  object.id = id;
+  object.jsonData = reader.readString(offsets[0]);
+  object.type = reader.readString(offsets[1]);
+  return object;
+}
+
+P _dataObjectDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+Id _dataObjectGetId(DataObject object) {
+  return object.id;
+}
+
+List<IsarLinkBase<dynamic>> _dataObjectGetLinks(DataObject object) {
+  return [];
+}
+
+void _dataObjectAttach(IsarCollection<dynamic> col, Id id, DataObject object) {
+  object.id = id;
+}
+
+extension DataObjectQueryWhereSort
+    on QueryBuilder<DataObject, DataObject, QWhere> {
+  QueryBuilder<DataObject, DataObject, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+}
+
+extension DataObjectQueryWhere
+    on QueryBuilder<DataObject, DataObject, QWhereClause> {
+  QueryBuilder<DataObject, DataObject, QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension DataObjectQueryFilter
+    on QueryBuilder<DataObject, DataObject, QFilterCondition> {
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> idEqualTo(
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition>
+      jsonDataGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'jsonData',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition>
+      jsonDataStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'jsonData',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> jsonDataMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'jsonData',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition>
+      jsonDataIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'jsonData',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition>
+      jsonDataIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'jsonData',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'type',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'type',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'type',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterFilterCondition> typeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'type',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension DataObjectQueryObject
+    on QueryBuilder<DataObject, DataObject, QFilterCondition> {}
+
+extension DataObjectQueryLinks
+    on QueryBuilder<DataObject, DataObject, QFilterCondition> {}
+
+extension DataObjectQuerySortBy
+    on QueryBuilder<DataObject, DataObject, QSortBy> {
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> sortByJsonData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'jsonData', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> sortByJsonDataDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'jsonData', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> sortByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> sortByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+}
+
+extension DataObjectQuerySortThenBy
+    on QueryBuilder<DataObject, DataObject, QSortThenBy> {
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenByJsonData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'jsonData', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenByJsonDataDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'jsonData', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenByType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QAfterSortBy> thenByTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'type', Sort.desc);
+    });
+  }
+}
+
+extension DataObjectQueryWhereDistinct
+    on QueryBuilder<DataObject, DataObject, QDistinct> {
+  QueryBuilder<DataObject, DataObject, QDistinct> distinctByJsonData(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'jsonData', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<DataObject, DataObject, QDistinct> distinctByType(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
+    });
+  }
+}
+
+extension DataObjectQueryProperty
+    on QueryBuilder<DataObject, DataObject, QQueryProperty> {
+  QueryBuilder<DataObject, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<DataObject, String, QQueryOperations> jsonDataProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'jsonData');
+    });
+  }
+
+  QueryBuilder<DataObject, String, QQueryOperations> typeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'type');
+    });
+  }
+}
