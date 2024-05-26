@@ -32,8 +32,13 @@ const StoredRequestSchema = CollectionSchema(
       name: r'queryParams',
       type: IsarType.string,
     ),
-    r'url': PropertySchema(
+    r'typeBoxName': PropertySchema(
       id: 3,
+      name: r'typeBoxName',
+      type: IsarType.string,
+    ),
+    r'url': PropertySchema(
+      id: 4,
       name: r'url',
       type: IsarType.string,
     )
@@ -71,6 +76,7 @@ int _storedRequestEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.typeBoxName.length * 3;
   bytesCount += 3 + object.url.length * 3;
   return bytesCount;
 }
@@ -84,7 +90,8 @@ void _storedRequestSerialize(
   writer.writeString(offsets[0], object.body);
   writer.writeString(offsets[1], object.method);
   writer.writeString(offsets[2], object.queryParams);
-  writer.writeString(offsets[3], object.url);
+  writer.writeString(offsets[3], object.typeBoxName);
+  writer.writeString(offsets[4], object.url);
 }
 
 StoredRequest _storedRequestDeserialize(
@@ -98,7 +105,8 @@ StoredRequest _storedRequestDeserialize(
   object.id = id;
   object.method = reader.readString(offsets[1]);
   object.queryParams = reader.readStringOrNull(offsets[2]);
-  object.url = reader.readString(offsets[3]);
+  object.typeBoxName = reader.readString(offsets[3]);
+  object.url = reader.readString(offsets[4]);
   return object;
 }
 
@@ -116,6 +124,8 @@ P _storedRequestDeserializeProp<P>(
     case 2:
       return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -715,6 +725,142 @@ extension StoredRequestQueryFilter
     });
   }
 
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'typeBoxName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'typeBoxName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'typeBoxName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'typeBoxName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition>
+      typeBoxNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'typeBoxName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<StoredRequest, StoredRequest, QAfterFilterCondition> urlEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -895,6 +1041,19 @@ extension StoredRequestQuerySortBy
     });
   }
 
+  QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy> sortByTypeBoxName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeBoxName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy>
+      sortByTypeBoxNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeBoxName', Sort.desc);
+    });
+  }
+
   QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy> sortByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -959,6 +1118,19 @@ extension StoredRequestQuerySortThenBy
     });
   }
 
+  QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy> thenByTypeBoxName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeBoxName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy>
+      thenByTypeBoxNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'typeBoxName', Sort.desc);
+    });
+  }
+
   QueryBuilder<StoredRequest, StoredRequest, QAfterSortBy> thenByUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'url', Sort.asc);
@@ -995,6 +1167,13 @@ extension StoredRequestQueryWhereDistinct
     });
   }
 
+  QueryBuilder<StoredRequest, StoredRequest, QDistinct> distinctByTypeBoxName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'typeBoxName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<StoredRequest, StoredRequest, QDistinct> distinctByUrl(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1026,6 +1205,12 @@ extension StoredRequestQueryProperty
   QueryBuilder<StoredRequest, String?, QQueryOperations> queryParamsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'queryParams');
+    });
+  }
+
+  QueryBuilder<StoredRequest, String, QQueryOperations> typeBoxNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'typeBoxName');
     });
   }
 

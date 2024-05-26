@@ -18,8 +18,7 @@ class TodoService {
     try {
       // Fetch all tasks using OfflineFirstClient and handle deserialization
       Response<List<Task>> response = await offlineFirstClient.getList<Task>(
-          'http://10.0.2.2:8080/api/tasks', // API endpoint
-          Task.fromJson); // Deserialization function
+          'http://10.0.2.2:8080/api/tasks'); // Deserialization function
 
       return response.data!;
     } catch (e) {
@@ -31,9 +30,7 @@ class TodoService {
     try {
       // Fetch a single task by ID using OfflineFirstClient
       Response<Task> response = await offlineFirstClient.get<Task>(
-          'http://10.0.2.2:8080/api/tasks/$id',
-          // Constructed endpoint with task ID
-          Task.fromJson); // Deserialization function
+          'http://10.0.2.2:8080/api/tasks/$id'); // Deserialization function
 
       return response.data!;
     } catch (e) {
@@ -46,8 +43,7 @@ class TodoService {
       // Create a new task using OfflineFirstClient
       var postResponse = await offlineFirstClient.post<Task>(
           'http://10.0.2.2:8080/api/tasks', // API endpoint
-          task, // Task data
-          Task.taskToJson); // Serialization function
+          task);
       return postResponse.data!;
     } catch (e) {
       throw Exception('Failed to create task: $e');
@@ -60,8 +56,7 @@ class TodoService {
       var putResponse = await offlineFirstClient.put<Task>(
           'http://10.0.2.2:8080/api/tasks/${task.id}',
           // Constructed endpoint with task ID
-          task, // Task data
-          Task.taskToJson); // Serialization function
+          task);
       return putResponse.data!;
     } catch (e) {
       throw Exception('Failed to update task: $e');
@@ -76,8 +71,7 @@ class TodoService {
       await offlineFirstClient.delete<Task>(
           'http://10.0.2.2:8080/api/tasks/$id',
           // Constructed endpoint with task ID
-          taskToDelete, // Task data to delete
-          Task.taskToJson); // Serialization function
+          taskToDelete); // Serialization function
     } catch (e) {
       throw Exception('Failed to delete task: $e');
     }

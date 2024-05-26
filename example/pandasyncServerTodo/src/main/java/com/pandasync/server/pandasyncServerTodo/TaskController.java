@@ -34,11 +34,13 @@ public class TaskController {
 
     @PostMapping
     public Task createTask(@RequestBody Task task) {
+        System.out.println("Update");
         return taskService.saveTask(task);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        System.out.println("Update2");
         Task updatedTask = taskService.updateTask(id, task);
         return ResponseEntity.ok(updatedTask);
     }

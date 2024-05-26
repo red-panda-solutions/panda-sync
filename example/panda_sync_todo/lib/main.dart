@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:panda_sync/panda_sync.dart';
+import 'package:panda_sync_todo/model/task_model.dart';
 import 'package:panda_sync_todo/screens/splash_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await OfflineFirstLocalStorageInit.initialize();
+  TypeRegistry.register<Task>('TaskBox', Task.taskToJson, Task.fromJson);
+
   runApp(MyApp());
 }
 
