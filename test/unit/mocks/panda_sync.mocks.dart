@@ -6,7 +6,16 @@ import 'package:panda_sync/src/services/connectivity_service.dart';
 import 'package:panda_sync/src/services/local_storage_service.dart';
 import 'package:panda_sync/src/services/synchronization_service.dart';
 
-@GenerateMocks([Connectivity, Isar, IsarCollection, QueryBuilder, Query,
-  LocalStorageService, Dio, SynchronizationService, ConnectivityService
+@GenerateMocks([
+  Connectivity,
+  Isar,
+  IsarCollection,
+  QueryBuilder,
+  Query,
+  LocalStorageService,
+  Dio,
+  SynchronizationService,
+  ConnectivityService,
+  HttpClientAdapter
 ])
 void main() {}
