@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <p align="center" style="margin-bottom: 0px;">
-  <img src="logo.png" width="85px">
+  <img src="logo.png" width="200px">
 </p>
 
 <h1 align="center" style="margin-top: 0px; font-size: 4em;">Panda Sync</h1>
