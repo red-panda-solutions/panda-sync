@@ -3,7 +3,7 @@
   <img src="logo.png" width="85px">
 </p>
 
-<h1 align="center" style="margin-top: 0px; font-size: 4em;">Flutter Data</h1>
+<h1 align="center" style="margin-top: 0px; font-size: 4em;">Panda Sync</h1>
 
 [![tests](https://img.shields.io/github/actions/workflow/status/red-panda-solutions/panda-sync/dart.yml?branch=main)](https://github.com/red-panda-solutions/panda-sync/actions) [![pub.dev](https://img.shields.io/pub/v/panda_sync?label=pub.dev&labelColor=333940&logo=dart)](https://pub.dev/packages/panda_sync) [![license](https://img.shields.io/github/license/red-panda-solutions/panda-sync?color=%23007A88&labelColor=333940&logo=mit)](https://github.com/red-panda-solutions/panda-sync/blob/master/LICENSE)
 
