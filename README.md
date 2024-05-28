@@ -1,12 +1,11 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <p align="center" style="margin-bottom: 0px;">
-  <img src="https://avatars2.githubusercontent.com/u/61839689?s=200&v=4" width="85px">
+  <img src="file.png" width="85px">
 </p>
 
 <h1 align="center" style="margin-top: 0px; font-size: 4em;">Flutter Data</h1>
 
-[![tests](https://img.shields.io/github/actions/workflow/status/flutterdata/flutter_data/test.yml?branch=master)](https://github.com/flutterdata/flutter_data/actions) [![codecov](https://codecov.io/gh/flutterdata/flutter_data/branch/master/graph/badge.svg)](https://codecov.io/gh/flutterdata/flutter_data) [![pub.dev](https://img.shields.io/pub/v/flutter_data?label=pub.dev&labelColor=333940&logo=dart)](https://pub.dev/packages/flutter_data) [![license](https://img.shields.io/github/license/flutterdata/flutter_data?color=%23007A88&labelColor=333940&logo=mit)](https://github.com/flutterdata/flutter_data/blob/master/LICENSE)
-
+[![tests](https://img.shields.io/github/actions/workflow/status/red-panda-solutions/panda-sync/test.yml?branch=main)](https://github.com/flutterdata/flutter_data/actions) [![pub.dev](https://img.shields.io/pub/v/panda_sync?label=pub.dev&labelColor=333940&logo=dart)](https://pub.dev/packages/panda_sync) [![license](https://img.shields.io/github/license/red-panda-solutions/panda-sync?color=%23007A88&labelColor=333940&logo=mit)](https://github.com/red-panda-solutions/panda-sync/blob/master/LICENSE)
 
 # panda_sync
 
@@ -16,11 +15,15 @@ ensuring your app remains functional even without internet connectivity. The
 
 ## Features
 
-- **Offline-First Functionality**: Automatically handles data synchronization when the device is online.
-- **Local Storage with Isar**: Utilizes Isar, a high-performance NoSQL database, for local data storage.
-- **Network Request Management**: Uses Dio for making network requests and managing connectivity states.
+- **Offline-First Functionality**: Automatically handles data synchronization when the device is
+  online.
+- **Local Storage with Isar**: Utilizes Isar, a high-performance NoSQL database, for local data
+  storage.
+- **Network Request Management**: Uses Dio for making network requests and managing connectivity
+  states.
 - **Type Registration**: Enforces type registration for data serialization and deserialization.
-- **Automatic Retry**: Automatically retries failed network requests when the device regains connectivity.
+- **Automatic Retry**: Automatically retries failed network requests when the device regains
+  connectivity.
 - **Customizable**: Allows customization of request handling and data processing.
 
 ## Installation
@@ -30,10 +33,11 @@ Add the following dependency to your `pubspec.yaml` file:
 ```yaml
 
 dependencies:
-    panda_sync: ^1.0.0 # Add the latest version
+  panda_sync: ^1.0.0 # Add the latest version
 ```
 
 ## Usage
+
 ### Step 1: Initialize Local Storage
 
 Before using the library, initialize Isar core:
@@ -43,13 +47,12 @@ Before using the library, initialize Isar core:
 import 'package:panda_sync/panda_sync.dart';
 
 void main() async {
-await OfflineFirstLocalStorageInit.initialize();
-runApp(MyApp());
+  await OfflineFirstLocalStorageInit.initialize();
+  runApp(MyApp());
 }
 ```
 
 ## Step 2: Extend your data models with `Identifieble` and implement static `fromJson` and `toJson` methods.
-
 
 ```dart
 import 'package:panda_sync/panda_sync.dart';
@@ -60,15 +63,17 @@ part 'task_model.g.dart';
 
 //This example uses json_serializable but this is not mandatory
 @JsonSerializable()
-class Task extends Identifiable{
+class Task extends Identifiable {
   @override
   int id;
+
   ...
-  
+
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+
   static Map<String, dynamic> taskToJson(Task task) => _$TaskToJson(task);
 }
-  
+
 ```
 
 ### Step 3: Register the types your app will use:
@@ -79,11 +84,11 @@ import 'package:panda_sync/panda_sync.dart';
 import 'model/task_model.dart'; // Import your model
 
 void main() async {
-    await OfflineFirstLocalStorageInit.initialize();
-    
-    TypeRegistry.register<Task>('TaskBox', Task.taskToJson, Task.fromJson);
-    
-    runApp(MyApp());
+  await OfflineFirstLocalStorageInit.initialize();
+
+  TypeRegistry.register<Task>('TaskBox', Task.taskToJson, Task.fromJson);
+
+  runApp(MyApp());
 }
 
 ```
@@ -95,7 +100,7 @@ Create an instance of OfflineFirstClient:
 ```dart
 
 final OfflineFirstClient offlineFirstClient =
-      OfflineFirstClient();
+OfflineFirstClient();
 ```
 
 ### Step 5: Use the `OfflineFirstClient` as you would use any other Http client
@@ -110,7 +115,7 @@ import 'model/task_model.dart';
 class TodoService {
   static final TodoService _instance = TodoService._internal();
   static final OfflineFirstClient offlineFirstClient =
-      OfflineFirstClient();
+  OfflineFirstClient();
 
   factory TodoService() {
     return _instance;
@@ -120,7 +125,8 @@ class TodoService {
 
   Future<List<Task>> getAllTasks() async {
     try {
-      Response<List<Task>> response = await offlineFirstClient.getList<Task>('http://10.0.2.2:8080/api/tasks');
+      Response<List<Task>> response = await offlineFirstClient.getList<Task>(
+          'http://10.0.2.2:8080/api/tasks');
       return response.data!;
     } catch (e) {
       throw Exception('Failed to load tasks: $e');
@@ -129,7 +135,8 @@ class TodoService {
 
   Future<Task> getTaskById(int id) async {
     try {
-      Response<Task> response = await offlineFirstClient.get<Task>('http://10.0.2.2:8080/api/tasks/$id'); 
+      Response<Task> response = await offlineFirstClient.get<Task>(
+          'http://10.0.2.2:8080/api/tasks/$id');
       return response.data!;
     } catch (e) {
       throw Exception('Failed to get task: $e');
@@ -138,7 +145,8 @@ class TodoService {
 
   Future<Task> createTask(Task task) async {
     try {
-      var postResponse = await offlineFirstClient.post<Task>('http://10.0.2.2:8080/api/tasks', task);
+      var postResponse = await offlineFirstClient.post<Task>(
+          'http://10.0.2.2:8080/api/tasks', task);
       return postResponse.data!;
     } catch (e) {
       throw Exception('Failed to create task: $e');
@@ -147,7 +155,8 @@ class TodoService {
 
   Future<Task> updateTask(Task task) async {
     try {
-      var putResponse = await offlineFirstClient.put<Task>('http://10.0.2.2:8080/api/tasks/${task.id}',  task);
+      var putResponse = await offlineFirstClient.put<Task>(
+          'http://10.0.2.2:8080/api/tasks/${task.id}', task);
       return putResponse.data!;
     } catch (e) {
       throw Exception('Failed to update task: $e');
@@ -157,8 +166,8 @@ class TodoService {
   Future<void> deleteTask(int id) async {
     try {
       Task taskToDelete = await getTaskById(id);
-      
-      await offlineFirstClient.delete<Task>('http://10.0.2.2:8080/api/tasks/$id',taskToDelete);
+
+      await offlineFirstClient.delete<Task>('http://10.0.2.2:8080/api/tasks/$id', taskToDelete);
     } catch (e) {
       throw Exception('Failed to delete task: $e');
     }
@@ -171,15 +180,22 @@ class TodoService {
 - **OfflineFirstClient**
 
     - `OfflineFirstClient()`: Creates an instance of **OfflineFirstClient**.
-    - `Future<Response<T>> get<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):` Makes a GET request.
-    - `Future<Response<T>> post<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):` Makes a POST request.
-    - `Future<Response<T>> put<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):` Makes a PUT request.
-    - `Future<Response<T>> delete<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):` Makes a DELETE request.
-    - `Future<Response<List<T>>> getList<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):` Makes a GET request for a list of items.
-    - `Future<Response<List<T>>> postList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):` Makes a POST request for a list of items.
-    - `Future<Response<List<T>>> putList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):` Makes a PUT request for a list of items.
-    - `Future<Response<List<T>>> deleteList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):` Makes a DELETE request for a list of items.
-
+    - `Future<Response<T>> get<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):`
+      Makes a GET request.
+    - `Future<Response<T>> post<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
+      Makes a POST request.
+    - `Future<Response<T>> put<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
+      Makes a PUT request.
+    - `Future<Response<T>> delete<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
+      Makes a DELETE request.
+    - `Future<Response<List<T>>> getList<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):`
+      Makes a GET request for a list of items.
+    - `Future<Response<List<T>>> postList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
+      Makes a POST request for a list of items.
+    - `Future<Response<List<T>>> putList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
+      Makes a PUT request for a list of items.
+    - `Future<Response<List<T>>> deleteList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
+      Makes a DELETE request for a list of items.
 
 # Contributing
 

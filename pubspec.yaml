@@ -1,7 +1,10 @@
 name: panda_sync
-description: A starting point for Dart libraries or applications.
+description: >
+  Seamless offline-first client library designed for easy under the hood management of lost 
+  connection. Inspired by Dio and Flutter_Data.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+homepage: https://github.com/red-panda-solutions/panda-sync
+documentation: https://github.com/red-panda-solutions/panda-sync
 
 environment:
   sdk: ^3.1.4
@@ -22,3 +25,10 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   mockito: ^5.4.4
   test: any
+
+
+# Exclude specific directories from publishing
+files:
+  exclude:
+    - example/pandasyncServerTodo
+    - example/panda_sync_todo
