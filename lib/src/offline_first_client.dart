@@ -14,12 +14,15 @@ class OfflineFirstClient {
   final LocalStorageService localStorage;
   final ConnectivityService connectivityService;
   final SynchronizationService synchronizationService;
+  late Future<String?> Function() getToken;
+  late Future<void> Function() refreshToken;
 
   factory OfflineFirstClient() => _instance;
 
   OfflineFirstClient._(this.dio, this.localStorage, this.connectivityService,
       this.synchronizationService) {
     connectivityService.connectivityStream.listen(handleConnectivityChange);
+    dio.interceptors.add(_createAuthInterceptor());
   }
 
   @visibleForTesting
@@ -394,6 +397,52 @@ class OfflineFirstClient {
         requestOptions: RequestOptions(path: url),
       );
     }
+  }
+
+  Interceptor _createAuthInterceptor() {
+    return InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await getToken();
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          try {
+            await refreshToken();
+            final token = await getToken();
+            if (token != null) {
+              error.requestOptions.headers['Authorization'] = 'Bearer $token';
+            }
+            final clonedRequest = await dio.request(
+              error.requestOptions.path,
+              options: Options(
+                method: error.requestOptions.method,
+                headers: error.requestOptions.headers,
+              ),
+              data: error.requestOptions.data,
+              queryParameters: error.requestOptions.queryParameters,
+            );
+            return handler.resolve(clonedRequest);
+          } catch (e) {
+            return handler.next(error);
+          }
+        } else {
+          return handler.next(error);
+        }
+      },
+    );
+  }
+
+  /// Registers token handlers for obtaining and refreshing the token.
+  void registerTokenHandlers({
+    required Future<String?> Function() getTokenHandler,
+    required Future<void> Function() refreshTokenHandler,
+  }) {
+    getToken = getTokenHandler;
+    refreshToken = refreshTokenHandler;
   }
 
   @visibleForTesting

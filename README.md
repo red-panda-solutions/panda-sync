@@ -33,13 +33,16 @@ The `OfflineFirstClient` class leverages Dio for HTTP requests, Isar for local s
 synchronization service to handle queued requests when the device is offline. Below is a diagram and
 a step-by-step explanation of how it works:
 
-![Diagram](/how_it_works.png)
+<div style="text-align: center;">
+    <img src="how_it_works.png" alt="OfflineFirstClient Diagram">
+</div>
 
 ### Explanation
 
 1. **Request Initialization**: The process starts when the `OfflineFirstClient` initiates a request.
 
-2. **Connectivity Check**: The `connectivity_plus` package checks whether an internet connection is available.
+2. **Connectivity Check**: The `connectivity_plus` package checks whether an internet connection is
+   available.
 
 3. **No Connection**:
     - If there is no connection, the data is stored locally in the Isar database.
@@ -64,9 +67,11 @@ a step-by-step explanation of how it works:
 - **Dio**: Used for making HTTP requests.
 - **Isar**: A local database used for storing data when the device is offline.
 - **connectivity_plus**: A package that provides network connectivity status.
-- **Synchronization Service**: Handles queued requests and synchronizes them with the server once the connection is available.
+- **Synchronization Service**: Handles queued requests and synchronizes them with the server once
+  the connection is available.
 
-By following this flow, the `OfflineFirstClient` ensures that your application remains functional even when the network is unavailable, synchronizing data seamlessly once the connection is restored.
+By following this flow, the `OfflineFirstClient` ensures that your application remains functional
+even when the network is unavailable, synchronizing data seamlessly once the connection is restored.
 
 ## Installation
 
@@ -135,7 +140,30 @@ void main() async {
 
 ```
 
-### Step 4: Create an Instance of `OfflineFirstClient`
+### Step 4: Register token handler
+
+Use the `registerTokenHandlers` method to provide functions for obtaining and refreshing the token.
+
+```dart
+configureClient() {
+  final client = OfflineFirstClient();
+
+  client.registerTokenHandlers(
+    getTokenHandler: () async {
+      // Retrieve the token from secure storage or any other source
+      return 'your-access-token';
+    },
+    refreshTokenHandler: () async {
+      // Implement the logic to refresh the token
+    },
+  );
+}
+```
+
+If a request returns any 401 Unauthorized error, the library will call the provided refresh token
+handler, update the token, and retry the request.
+
+### Step 5: Create an Instance of `OfflineFirstClient`
 
 Create an instance of OfflineFirstClient:
 
@@ -150,94 +178,28 @@ OfflineFirstClient();
 Here's how to use the library in a service class:
 
 ```dart
-import 'package:dio/dio.dart';
-import 'package:panda_sync/panda_sync.dart';
-import 'model/task_model.dart';
+  getTasks() {
+  OfflineFirstClient offlineFirstClient = OfflineFirstClient();
 
-class TodoService {
-  static final TodoService _instance = TodoService._internal();
-  static final OfflineFirstClient offlineFirstClient =
-  OfflineFirstClient();
-
-  factory TodoService() {
-    return _instance;
-  }
-
-  TodoService._internal();
-
-  Future<List<Task>> getAllTasks() async {
-    try {
-      Response<List<Task>> response = await offlineFirstClient.getList<Task>(
-          'http://10.0.2.2:8080/api/tasks');
-      return response.data!;
-    } catch (e) {
-      throw Exception('Failed to load tasks: $e');
-    }
-  }
-
-  Future<Task> getTaskById(int id) async {
-    try {
-      Response<Task> response = await offlineFirstClient.get<Task>(
-          'http://10.0.2.2:8080/api/tasks/$id');
-      return response.data!;
-    } catch (e) {
-      throw Exception('Failed to get task: $e');
-    }
-  }
-
-  Future<Task> createTask(Task task) async {
-    try {
-      var postResponse = await offlineFirstClient.post<Task>(
-          'http://10.0.2.2:8080/api/tasks', task);
-      return postResponse.data!;
-    } catch (e) {
-      throw Exception('Failed to create task: $e');
-    }
-  }
-
-  Future<Task> updateTask(Task task) async {
-    try {
-      var putResponse = await offlineFirstClient.put<Task>(
-          'http://10.0.2.2:8080/api/tasks/${task.id}', task);
-      return putResponse.data!;
-    } catch (e) {
-      throw Exception('Failed to update task: $e');
-    }
-  }
-
-  Future<void> deleteTask(int id) async {
-    try {
-      Task taskToDelete = await getTaskById(id);
-
-      await offlineFirstClient.delete<Task>('http://10.0.2.2:8080/api/tasks/$id', taskToDelete);
-    } catch (e) {
-      throw Exception('Failed to delete task: $e');
-    }
+  offlineFirstClient.registerTokenHandlers(getTokenHandler: () async {
+    // Retrieve the token from secure storage or any other source
+    return 'your-access-token';
+  }, refreshTokenHandler: () async {
+    // Implement the logic to refresh the token
+  });
+  try {
+    Response<List<Task>> response = await offlineFirstClient.getList<Task>(
+        'http://10.0.2.2:8080/api/tasks');
+    return response.data!;
+  } catch (e) {
+    throw Exception('Failed to load tasks: $e');
   }
 }
 ```
 
-# API Documentation
+# Documentation
 
-- **OfflineFirstClient**
-
-    - `OfflineFirstClient()`: Creates an instance of **OfflineFirstClient**.
-    - `Future<Response<T>> get<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):`
-      Makes a GET request.
-    - `Future<Response<T>> post<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
-      Makes a POST request.
-    - `Future<Response<T>> put<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
-      Makes a PUT request.
-    - `Future<Response<T>> delete<T extends Identifiable>(String url, T data, {Map<String, dynamic>? queryParameters}):`
-      Makes a DELETE request.
-    - `Future<Response<List<T>>> getList<T extends Identifiable>(String url, {Map<String, dynamic>? queryParameters}):`
-      Makes a GET request for a list of items.
-    - `Future<Response<List<T>>> postList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
-      Makes a POST request for a list of items.
-    - `Future<Response<List<T>>> putList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
-      Makes a PUT request for a list of items.
-    - `Future<Response<List<T>>> deleteList<T extends Identifiable>(String url, List<T> dataList, {Map<String, dynamic>? queryParameters}):`
-      Makes a DELETE request for a list of items.
+Please refer to the code documentation for extensive info on the methods
 
 # Contributing
 

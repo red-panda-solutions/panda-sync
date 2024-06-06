@@ -1,17 +1,27 @@
-
 import 'package:dio/dio.dart';
 import 'package:panda_sync/panda_sync.dart';
 
 class TodoService {
   static final TodoService _instance = TodoService._internal();
   static final OfflineFirstClient offlineFirstClient =
-  OfflineFirstClient(); // Instance of OfflineFirstClient
+      configureOfflineFirstClient();
 
   factory TodoService() {
     return _instance;
   }
 
   TodoService._internal();
+
+  static OfflineFirstClient configureOfflineFirstClient() {
+    OfflineFirstClient offlineFirstClient = OfflineFirstClient();
+    offlineFirstClient.registerTokenHandlers(getTokenHandler: () async {
+      // Retrieve the token from secure storage or any other source
+      return 'your-access-token';
+    }, refreshTokenHandler: () async {
+      // Implement the logic to refresh the token
+    });
+    return offlineFirstClient;
+  }
 
   Future<List<Task>> getAllTasks() async {
     try {
@@ -77,8 +87,7 @@ class TodoService {
   }
 }
 
-
-class Task extends Identifiable{
+class Task extends Identifiable {
   @override
   int id;
   String title;
@@ -88,19 +97,19 @@ class Task extends Identifiable{
 
   Task(
       {required this.title,
-        required this.priority,
-        required this.status,
-        DateTime? date,
-        int? id})
+      required this.priority,
+      required this.status,
+      DateTime? date,
+      int? id})
       : date = date ?? DateTime.now(),
         id = id ?? 0;
 
   Task.withId(
       {required this.id,
-        required this.title,
-        required this.priority,
-        required this.status,
-        DateTime? date})
+      required this.title,
+      required this.priority,
+      required this.status,
+      DateTime? date})
       : date = date ?? DateTime.now();
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
@@ -110,20 +119,19 @@ class Task extends Identifiable{
   Map<String, dynamic> toJson() => _$TaskToJson(this);
 }
 
-
 Task _$TaskFromJson(Map<String, dynamic> json) => Task(
-  title: json['title'] as String,
-  priority: json['priority'] as String,
-  status: (json['status'] as num).toInt(),
-  date:
-  json['date'] == null ? null : DateTime.parse(json['date'] as String),
-  id: (json['id'] as num?)?.toInt(),
-);
+      title: json['title'] as String,
+      priority: json['priority'] as String,
+      status: (json['status'] as num).toInt(),
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      id: (json['id'] as num?)?.toInt(),
+    );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
-  'id': instance.id,
-  'title': instance.title,
-  'date': instance.date.toIso8601String(),
-  'priority': instance.priority,
-  'status': instance.status,
-};
+      'id': instance.id,
+      'title': instance.title,
+      'date': instance.date.toIso8601String(),
+      'priority': instance.priority,
+      'status': instance.status,
+    };
