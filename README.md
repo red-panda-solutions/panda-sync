@@ -26,6 +26,48 @@ ensuring your app remains functional even without internet connectivity. The
   connectivity.
 - **Customizable**: Allows customization of request handling and data processing.
 
+## How it works?
+
+This repository implements an offline-first client for Flutter applications.
+The `OfflineFirstClient` class leverages Dio for HTTP requests, Isar for local storage, and a custom
+synchronization service to handle queued requests when the device is offline. Below is a diagram and
+a step-by-step explanation of how it works:
+
+![Diagram](/how_it_works.png)
+
+### Explanation
+
+1. **Request Initialization**: The process starts when the `OfflineFirstClient` initiates a request.
+
+2. **Connectivity Check**: The `connectivity_plus` package checks whether an internet connection is available.
+
+3. **No Connection**:
+    - If there is no connection, the data is stored locally in the Isar database.
+    - The request is queued for synchronization once the connection is restored.
+
+4. **Connection Present**:
+    - If a connection is present, the client checks if there are any stored requests in the queue.
+
+5. **Empty Queue**:
+    - If the queue is empty, the request is sent directly to the remote REST API.
+
+6. **Non-empty Queue**:
+    - If the queue is not empty, the `synchronization_service` processes all queued requests.
+    - Each queued request is sent to the remote REST API.
+
+7. **Remote REST API**:
+    - The request reaches the remote REST API and gets processed.
+    - The response is handled by the `OfflineFirstClient`, updating local storage as necessary.
+
+### Key Components
+
+- **Dio**: Used for making HTTP requests.
+- **Isar**: A local database used for storing data when the device is offline.
+- **connectivity_plus**: A package that provides network connectivity status.
+- **Synchronization Service**: Handles queued requests and synchronizes them with the server once the connection is available.
+
+By following this flow, the `OfflineFirstClient` ensures that your application remains functional even when the network is unavailable, synchronizing data seamlessly once the connection is restored.
+
 ## Installation
 
 Add the following dependency to your `pubspec.yaml` file:
