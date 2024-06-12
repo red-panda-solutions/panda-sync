@@ -221,6 +221,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Isar Database](https://github.com/isar/isar)
 - [Dio HTTP Client](https://github.com/cfug/dio)
 - [Connectivity Plus](https://github.com/fluttercommunity/plus_plugins/tree/main/packages/connectivity_plus/connectivity_plus)
+- [Flutter Data](https://github.com/flutterdata/flutter_data)
 
 # Contact
 
