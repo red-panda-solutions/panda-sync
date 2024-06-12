@@ -169,8 +169,7 @@ Create an instance of OfflineFirstClient:
 
 ```dart
 
-final OfflineFirstClient offlineFirstClient =
-OfflineFirstClient();
+final OfflineFirstClient offlineFirstClient = OfflineFirstClient();
 ```
 
 ### Step 5: Use the `OfflineFirstClient` as you would use any other Http client
@@ -178,15 +177,9 @@ OfflineFirstClient();
 Here's how to use the library in a service class:
 
 ```dart
-  getTasks() {
+getTasks() {
   OfflineFirstClient offlineFirstClient = OfflineFirstClient();
 
-  offlineFirstClient.registerTokenHandlers(getTokenHandler: () async {
-    // Retrieve the token from secure storage or any other source
-    return 'your-access-token';
-  }, refreshTokenHandler: () async {
-    // Implement the logic to refresh the token
-  });
   try {
     Response<List<Task>> response = await offlineFirstClient.getList<Task>(
         'http://10.0.2.2:8080/api/tasks');
