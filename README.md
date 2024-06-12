@@ -178,8 +178,6 @@ Here's how to use the library in a service class:
 
 ```dart
 getTasks() {
-  OfflineFirstClient offlineFirstClient = OfflineFirstClient();
-
   try {
     Response<List<Task>> response = await offlineFirstClient.getList<Task>(
         'http://10.0.2.2:8080/api/tasks');
