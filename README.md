@@ -13,6 +13,9 @@
 using Flutter. It provides seamless data synchronization between local storage and a remote server,
 ensuring your app remains functional even without internet connectivity. The
 
+*Disclaimer* - this package is not yet published. The project is in testing state, once that is
+finished the project will be published. 
+
 ## Features
 
 - **Offline-First Functionality**: Automatically handles data synchronization when the device is

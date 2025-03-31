@@ -24,11 +24,21 @@ class DataObject {
   late String jsonData;
 }
 
+/// A service for local storage operations using Isar database.
+///
+/// The [LocalStorageService] class provides methods to store, retrieve, and manage
+/// data objects and stored requests in the Isar database.
 class LocalStorageService {
   final Isar isar;
 
+  /// Creates an instance of [LocalStorageService] with the given Isar database instance.
   LocalStorageService(this.isar);
 
+  /// Stores a data object of type [T] in the local storage.
+  ///
+  /// - [data]: The data object to store.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<void> storeData<T extends Identifiable>(T data) async {
     var registryEntry = TypeRegistry.get<T>();
     if (registryEntry == null) {
@@ -54,6 +64,11 @@ class LocalStorageService {
     });
   }
 
+  /// Stores a list of data objects of type [T] in the local storage.
+  ///
+  /// - [dataList]: The list of data objects to store.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<void> storeDataList<T extends Identifiable>(List<T> dataList) async {
     var registryEntry = TypeRegistry.get<T>();
     if (registryEntry == null) {
@@ -81,6 +96,11 @@ class LocalStorageService {
     });
   }
 
+  /// Retrieves all data objects of type [T] from the local storage.
+  ///
+  /// Returns a list of data objects.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<List<T>> getData<T extends Identifiable>() async {
     var registryEntry = TypeRegistry.get<T>();
     if (registryEntry == null) {
@@ -96,6 +116,11 @@ class LocalStorageService {
         .toList();
   }
 
+  /// Updates a cached data object of type [T] in the local storage.
+  ///
+  /// - [data]: The data object to update.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<void> updateCachedData<T extends Identifiable>(T data) async {
     var registryEntry = TypeRegistry.get<T>();
     if (registryEntry == null) {
@@ -116,6 +141,11 @@ class LocalStorageService {
     });
   }
 
+  /// Removes a data object of type [T] from the local storage by its id.
+  ///
+  /// - [id]: The id of the data object to remove.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<void> removeData<T extends Identifiable>(dynamic id) async {
     var registryEntry = TypeRegistry.get<T>();
     if (registryEntry == null) {
@@ -134,6 +164,13 @@ class LocalStorageService {
     });
   }
 
+  /// Retrieves a cached response of type [T] from the local storage for the given URL.
+  ///
+  /// - [url]: The URL for which to retrieve the cached response.
+  ///
+  /// Returns a [Response] object containing the cached data.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<Response<T>> getCachedResponse<T extends Identifiable>(
       String url) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -167,6 +204,14 @@ class LocalStorageService {
     );
   }
 
+  /// Stores a request in the local storage.
+  ///
+  /// - [url]: The URL of the request.
+  /// - [method]: The HTTP method of the request.
+  /// - [queryParams]: The query parameters of the request.
+  /// - [data]: The data object to store with the request.
+  ///
+  /// Throws an exception if the type [T] is not registered.
   Future<void> storeRequest<T extends Identifiable>(String url, String method,
       Map<String, dynamic>? queryParams, T data) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -184,10 +229,16 @@ class LocalStorageService {
     });
   }
 
+  /// Retrieves all stored requests from the local storage.
+  ///
+  /// Returns a list of [StoredRequest] objects.
   Future<List<StoredRequest>> getAllStoredRequests() async {
     return isar.storedRequests.where().findAll();
   }
 
+  /// Deletes a stored request from the local storage by its id.
+  ///
+  /// - [id]: The id of the stored request to delete.
   Future<void> deleteStoredRequest(int id) async {
     await isar.writeTxn(() async {
       await isar.storedRequests.delete(id);

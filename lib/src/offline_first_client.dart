@@ -7,6 +7,10 @@ import 'package:panda_sync/src/utils/isar_manager.dart';
 
 import '../panda_sync.dart';
 
+/// A client that provides offline-first capabilities for HTTP operations.
+///
+/// The [OfflineFirstClient] class allows for seamless offline access and synchronization
+/// of data by caching responses locally and synchronizing with the server when connectivity is restored.
 class OfflineFirstClient {
   static final OfflineFirstClient _instance =
       OfflineFirstClient._createInstance();
@@ -17,6 +21,9 @@ class OfflineFirstClient {
   late Future<String?> Function() getToken;
   late Future<void> Function() refreshToken;
 
+  /// Factory constructor for [OfflineFirstClient].
+  ///
+  /// Returns the singleton instance of [OfflineFirstClient].
   factory OfflineFirstClient() => _instance;
 
   OfflineFirstClient._(this.dio, this.localStorage, this.connectivityService,
@@ -29,6 +36,9 @@ class OfflineFirstClient {
   OfflineFirstClient.createForTest(this.dio, this.localStorage,
       this.connectivityService, this.synchronizationService);
 
+  /// Creates and initializes an instance of [OfflineFirstClient].
+  ///
+  /// This method sets up [Dio], [LocalStorageService], [ConnectivityService], and [SynchronizationService].
   static OfflineFirstClient _createInstance() {
     Dio dio = Dio(); // Optionally configure Dio here
     LocalStorageService localStorage =
@@ -41,6 +51,12 @@ class OfflineFirstClient {
         dio, localStorage, connectivityService, synchronizationService);
   }
 
+  /// Sends a GET request to the specified [url] and returns the response.
+  ///
+  /// If the device is offline, it fetches the data from local storage.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<T>> get<T extends Identifiable>(String url,
       {Map<String, dynamic>? queryParameters}) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -63,6 +79,13 @@ class OfflineFirstClient {
     }
   }
 
+  /// Sends a POST request to the specified [url] with [data] and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [data]: The data to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<T>> post<T extends Identifiable>(String url, T data,
       {Map<String, dynamic>? queryParameters}) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -97,6 +120,13 @@ class OfflineFirstClient {
     }
   }
 
+  /// Sends a PUT request to the specified [url] with [data] and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [data]: The data to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<T>> put<T extends Identifiable>(String url, T data,
       {Map<String, dynamic>? queryParameters}) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -133,6 +163,13 @@ class OfflineFirstClient {
     }
   }
 
+  /// Sends a DELETE request to the specified [url] with [data] and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [data]: The data to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<T>> delete<T extends Identifiable>(String url, T data,
       {Map<String, dynamic>? queryParameters}) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -192,6 +229,12 @@ class OfflineFirstClient {
     }
   }
 
+  /// Sends a GET request to the specified [url] and returns the response as a list of items.
+  ///
+  /// If the device is offline, it fetches the data from local storage.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<List<T>>> getList<T extends Identifiable>(String url,
       {Map<String, dynamic>? queryParameters}) async {
     var registryEntry = TypeRegistry.get<T>();
@@ -216,6 +259,13 @@ class OfflineFirstClient {
     }
   }
 
+  /// Sends a POST request to the specified [url] with a list of items and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [dataList]: The list of items to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<List<T>>> postList<T extends Identifiable>(
       String url, List<T> dataList,
       {Map<String, dynamic>? queryParameters}) async {
@@ -268,6 +318,13 @@ class OfflineFirstClient {
     );
   }
 
+  /// Sends a PUT request to the specified [url] with a list of items and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [dataList]: The list of items to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<List<T>>> putList<T extends Identifiable>(
       String url, List<T> dataList,
       {Map<String, dynamic>? queryParameters}) async {
@@ -321,6 +378,13 @@ class OfflineFirstClient {
     );
   }
 
+  /// Sends a DELETE request to the specified [url] with a list of items and returns the response.
+  ///
+  /// If the device is offline, it stores the request locally and queues it for later execution.
+  ///
+  /// - [url]: The endpoint URL.
+  /// - [dataList]: The list of items to be sent in the request body.
+  /// - [queryParameters]: Optional query parameters.
   Future<Response<List<T>>> deleteList<T extends Identifiable>(
       String url, List<T> dataList,
       {Map<String, dynamic>? queryParameters}) async {
@@ -399,6 +463,7 @@ class OfflineFirstClient {
     }
   }
 
+  /// Creates an interceptor to handle token injection and refresh.
   Interceptor _createAuthInterceptor() {
     return InterceptorsWrapper(
       onRequest: (options, handler) async {
@@ -445,6 +510,11 @@ class OfflineFirstClient {
     refreshToken = refreshTokenHandler;
   }
 
+  /// Handles changes in network connectivity.
+  ///
+  /// Processes the request queue when connectivity is restored.
+  ///
+  /// - [isConnected]: The current connectivity status.
   @visibleForTesting
   void handleConnectivityChange(bool isConnected) {
     if (isConnected) {
@@ -454,6 +524,10 @@ class OfflineFirstClient {
     }
   }
 
+  /// Converts a Dio response to a [Response<T>].
+  ///
+  /// - [result]: The deserialized data.
+  /// - [response]: The original Dio response.
   Response<T> _dioResponse<T>(result, Response<dynamic> response) {
     return Response<T>(
       data: result,
